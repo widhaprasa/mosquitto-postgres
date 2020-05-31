@@ -2,10 +2,7 @@
 set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-    CREATE ROLE mosquitto_acl WITH LOGIN PASSWORD 'mosquitto_acl';
-    CREATE DATABASE mosquitto_acl WITH OWNER mosquitto_acl;
-
-    \c mosquitto_acl
+    \c $POSTGRES_DB
 
     CREATE TABLE account
     (
@@ -15,7 +12,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
         pw text,
         super integer
     );
-    ALTER TABLE account OWNER TO mosquitto_acl;
 
     CREATE TABLE acls
     (
@@ -25,7 +21,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
         topic varchar(255),
         rw integer
     );
-    ALTER TABLE acls OWNER TO mosquitto_acl;
 
     CREATE INDEX account_username ON account(username);
     CREATE INDEX account_group ON account(group_);
